@@ -34,10 +34,6 @@ LOG_FILE="$LOG_DIR/main.log"
 # Create log directory if it doesn't exist
 mkdir -p "$LOG_DIR"
 
-# Simple logging function that writes to both console and file
-log_output() {
-    echo "$@" | tee -a "$LOG_FILE"
-}
 
 # Capture all output to log file while still showing on console
 exec 1> >(tee -a "$LOG_FILE")
@@ -55,7 +51,6 @@ export BASE_OUT="$BASE_DIR/output"
 # Output subdirectories
 export OUTPUT_TRIMMED_DIR="$BASE_OUT/trimmed"
 export OUTPUT_FASTQC_DIR="$BASE_OUT/fastqc"
-export OUTPUT_FASTQC_MULTIQC_DIR="$BASE_OUT/multiqc_reads"
 export REF_DIR="$BASE_OUT/reference"
 export HISAT2_INDEX_DIR="$BASE_OUT/hisat2_index"
 export ALIGNMENT_DIR="$BASE_OUT/alignment"
@@ -66,7 +61,7 @@ export HTSEQ_COUNT_DIR="$BASE_OUT/htseq_counts"
 # CUTADAPT PARAMETERS (Adapter Trimming)
 #===============================================================================
 
-export QUALITY_THRESHOLD=20           # Phred quality score threshold
+export QUALITY_THRESHOLD=28           # Phred quality score threshold (28 green zone)
 export MIN_LENGTH=20                  # Minimum read length after trimming
 export TRIMMING_THREADS=4             # Number of threads for trimming
 
@@ -86,9 +81,9 @@ export FASTQC_MEMORY=250              # Memory allocation for FastQC (MB)
 #===============================================================================
 
 export HISAT2_THREADS=4               # Number of threads for alignment
-export SEED=123                       # Seed for reproducibility
-export PHRED_QUALITY="33"             # Phred quality encoding (33 or 64)
-export RNA_STRANDNESS="R"             # RNA library strandness (R, F, RF, etc.)
+export SEED=8                       # Seed for reproducibility
+export PHRED_FORMAT="33"             # Phred quality encoding format (33 or 64)
+export RNA_STRANDNESS="RF"             # RNA library strandness (R, F, RF, etc.)
 export MAX_ALIGNMENTS=1               # Number of alignment hits to report per read
 
 # Reference genome configuration
@@ -108,13 +103,13 @@ export COMPRESSION_LEVEL=9            # BAM compression level (1-9)
 #===============================================================================
 
 export HTSEQ_FORMAT="bam"             # Input file format
-export HTSEQ_STRANDED="reverse"       # Strandedness (yes, reverse, or no)
+export HTSEQ_STRANDED="no"       # Strandedness (yes, reverse, or no)
 export HTSEQ_MODE="intersection-nonempty"  # Counting mode
 export HTSEQ_MIN_QUAL=10              # Minimum alignment quality
 export HTSEQ_FEATURE_TYPE="exon"      # Feature type to count
 export HTSEQ_IDATTR="gene_id"         # Feature attribute for grouping
 export HTSEQ_ADDITIONAL_ATTR="gene_name"  # Additional output attributes
-export HTSEQ_THREADS=4                # Number of threads
+export HTSEQ_THREADS=8                # Number of threads
 
 export ANNOTATION_FILE="$REF_GTF"     # Annotation file path
 
@@ -165,12 +160,12 @@ print_info "Creating output directory structure..."
 
 mkdir -p "$OUTPUT_TRIMMED_DIR" || error_exit "Failed to create directory '$OUTPUT_TRIMMED_DIR'."
 mkdir -p "$OUTPUT_FASTQC_DIR" || error_exit "Failed to create directory '$OUTPUT_FASTQC_DIR'."
-mkdir -p "$OUTPUT_FASTQC_MULTIQC_DIR" || error_exit "Failed to create directory '$OUTPUT_FASTQC_MULTIQC_DIR'."
 mkdir -p "$REF_DIR" || error_exit "Failed to create directory '$REF_DIR'."
 mkdir -p "$HISAT2_INDEX_DIR" || error_exit "Failed to create directory '$HISAT2_INDEX_DIR'."
 mkdir -p "$ALIGNMENT_DIR" || error_exit "Failed to create directory '$ALIGNMENT_DIR'."
 mkdir -p "$MULTIQC_ALIGN_DIR" || error_exit "Failed to create directory '$MULTIQC_ALIGN_DIR'."
 mkdir -p "$HTSEQ_COUNT_DIR" || error_exit "Failed to create directory '$HTSEQ_COUNT_DIR'."
+
 
 print_success "Output directory structure created"
 echo ""
@@ -209,13 +204,14 @@ echo -e "${GREEN}STAGE 2: Quality Control - Trimmed Reads (FastQC)${NC}"
 echo -e "${GREEN}========================================${NC}"
 echo ""
 
-if bash "$SCRIPT_DIR/quality_reads.sh"; then
+if bash "$SCRIPT_DIR/qc_reads.sh"; then
     print_success "Stage 2 completed: Quality control of trimmed reads successful"
 else
     error_exit "Stage 2 failed: Quality control of trimmed reads pipeline encountered an error"
 fi
 
 echo ""
+
 
 # ============================================================================
 # STAGE 3: READ ALIGNMENT
@@ -282,11 +278,9 @@ echo ""
 
 # Run MultiQC on all output directories to create comprehensive report
 multiqc \
-    "$OUTPUT_FASTQC_DIR" \
-    "$OUTPUT_TRIMMED_DIR" \
-    "$ALIGNMENT_DIR" \
-    "$HTSEQ_COUNT_DIR" \
+    "$BASE_OUT" \
     -o "$MULTIQC_ALIGN_DIR" \
+    --dirs --dirs-depth 2 \
     --title "RNA-Seq Pipeline - Comprehensive Quality Report" \
     2>&1 | tee -a "$LOG_FILE" || true
 

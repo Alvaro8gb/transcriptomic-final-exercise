@@ -122,7 +122,7 @@ align_paired_reads() {
         --summary-file "$summary_file" \
         --rna-strandness "$RNA_STRANDNESS" \
         --seed "$SEED" \
-        --phred"$PHRED_QUALITY" \
+        --phred"$PHRED_FORMAT" \
         -p "$HISAT2_THREADS" \
         -k "$MAX_ALIGNMENTS" \
         -x "$index_dir/$index_name" \

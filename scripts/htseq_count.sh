@@ -95,6 +95,8 @@ run_htseq_count() {
     
     # Define output file
     local count_file="$output_dir/${sample_name}.htseq"
+    local log_file="$output_dir/${sample_name}.log"
+
     
     print_info "Running HTSeq-count on: $sample_name"
     
@@ -108,8 +110,9 @@ run_htseq_count() {
         --idattr "$IDATTR" \
         --additional-attr "$ADDITIONAL_ATTR" \
         "$bam_file" "$gtf_file" \
-        > "$count_file" 2>&1 || \
+        > "$count_file" 2> "$log_file" || \
         error_exit "HTSeq-count failed for $sample_name"
+    
     
     print_success "HTSeq-count complete: $sample_name"
     
