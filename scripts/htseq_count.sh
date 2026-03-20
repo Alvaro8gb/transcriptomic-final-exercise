@@ -32,6 +32,7 @@ source "$SCRIPT_DIR/utils.sh"
 
 # For compatibility, create local aliases for HTSeq parameters
 FORMAT="$HTSEQ_FORMAT"
+ORDER="$HTSEQ_ORDER"
 STRANDED="$HTSEQ_STRANDED"
 MODE="$HTSEQ_MODE"
 MIN_QUAL="$HTSEQ_MIN_QUAL"
@@ -103,6 +104,7 @@ run_htseq_count() {
     # Run HTSeq-count with specified parameters
     htseq-count \
         --format "$FORMAT" \
+        --order "$ORDER" \
         --stranded "$STRANDED" \
         --mode "$MODE" \
         --minaqual "$MIN_QUAL" \

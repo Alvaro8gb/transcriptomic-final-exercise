@@ -26,18 +26,22 @@ source "$SCRIPT_DIR/utils.sh"
 # Validation checks
 #===============================================================================
 
-# Check if input directory exists
-if [[ ! -d "$OUTPUT_TRIMMED_DIR" ]]; then
-    error_exit "Trimmed input directory '$OUTPUT_TRIMMED_DIR' not found."
-fi
-
 # Check if FASTQ files exist in input directory
-FASTQ_COUNT=$(ls "$OUTPUT_TRIMMED_DIR"/*.fastq 2>/dev/null | wc -l)
+FASTQ_COUNT=$(ls "$INPUT_DIR"/*.fastq 2>/dev/null | wc -l)
 if [[ $FASTQ_COUNT -eq 0 ]]; then
     error_exit "No FASTQ files found in '$OUTPUT_TRIMMED_DIR'."
 fi
 
-print_info "Found $FASTQ_COUNT trimmed FASTQ files to process."
+print_info "Found $FASTQ_COUNT FASTQ files to process."
+
+
+# Check if FASTQ files exist in input directory
+FASTQ_COUNT_TRIMMED=$(ls "$OUTPUT_TRIMMED_DIR"/*.fastq 2>/dev/null | wc -l)
+if [[ $FASTQ_COUNT -eq 0 ]]; then
+    error_exit "No FASTQ files found in '$OUTPUT_TRIMMED_DIR'."
+fi
+
+print_info "Found $FASTQ_COUNT_TRIMMED trimmed FASTQ files to process."
 
 #===============================================================================
 # Create output directories
@@ -79,6 +83,8 @@ print_info "Starting trimmed FastQC quality control analysis..."
 echo ""
 
 # Run FastQC analysis
+
+run_fastqc_analysis "$INPUT_DIR" "$OUTPUT_FASTQC_DIR" "$FASTQC_THREADS"
 run_fastqc_analysis "$OUTPUT_TRIMMED_DIR" "$OUTPUT_FASTQC_DIR" "$FASTQC_THREADS"
 
 

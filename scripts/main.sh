@@ -104,13 +104,13 @@ export COMPRESSION_LEVEL=9            # BAM compression level (1-9)
 
 export HTSEQ_FORMAT="bam"             # Input file format
 export HTSEQ_STRANDED="no"       # Strandedness (yes, reverse, or no)
+export HTSEQ_ORDER="pos"         # pos or name
 export HTSEQ_MODE="intersection-nonempty"  # Counting mode
 export HTSEQ_MIN_QUAL=10              # Minimum alignment quality
 export HTSEQ_FEATURE_TYPE="exon"      # Feature type to count
 export HTSEQ_IDATTR="gene_id"         # Feature attribute for grouping
 export HTSEQ_ADDITIONAL_ATTR="gene_name"  # Additional output attributes
 export HTSEQ_THREADS=8                # Number of threads
-
 export ANNOTATION_FILE="$REF_GTF"     # Annotation file path
 
 #===============================================================================
@@ -279,10 +279,9 @@ echo ""
 # Run MultiQC on all output directories to create comprehensive report
 multiqc \
     "$BASE_OUT" \
-    -o "$MULTIQC_ALIGN_DIR" \
-    --dirs --dirs-depth 2 \
-    --title "RNA-Seq Pipeline - Comprehensive Quality Report" \
-    2>&1 | tee -a "$LOG_FILE" || true
+    -o "$MULTIQC_ALIGN_DIR" 
+    --title "RNA-Seq Pipeline - Comprehensive Quality Report" 
+
 
 if [[ -f "$MULTIQC_ALIGN_DIR/multiqc_report.html" ]]; then
     print_success "MultiQC aggregation completed"

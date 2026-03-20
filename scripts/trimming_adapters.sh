@@ -87,8 +87,8 @@ trim_paired_reads() {
     print_success "Trimmed: $sample_name"
     
     # Extract and display key statistics
-    local reads_processed=$(grep "Total reads processed" "$report" | awk '{print $4}' | tr -d ',')
-    local reads_trimmed=$(grep "Reads written" "$report" | head -1 | awk '{print $4}' | tr -d '(')
+    local reads_processed=$(grep "Total basepairs processed:" "$report" | awk '{print $4}')
+    local reads_trimmed=$(grep "Total written (filtered): " "$report" | head -1 | awk '{print $4}')
     
     echo "  - Reads processed: $reads_processed"
     echo "  - Reads retained: $reads_trimmed"
