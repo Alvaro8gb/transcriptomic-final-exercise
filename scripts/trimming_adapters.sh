@@ -68,7 +68,7 @@ trim_paired_reads() {
     # Define output file paths
     local trimmed_r1="$output_dir/${sample_name}_1.trimmed.fastq"
     local trimmed_r2="$output_dir/${sample_name}_2.trimmed.fastq"
-    local report="$output_dir/${sample_name}.trimming_report.txt"
+    local report="$output_dir/${sample_name}.trimming_report.log"
     
     print_info "Trimming sample: $sample_name"
     

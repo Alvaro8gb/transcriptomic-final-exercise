@@ -92,14 +92,16 @@ run_fastqc_analysis "$OUTPUT_TRIMMED_DIR" "$OUTPUT_FASTQC_DIR" "$FASTQC_THREADS"
 # Final summary
 #===============================================================================
 
+TOTAL_FILES=$FASTQ_COUNT+$FASTQ_COUNT_TRIMMED
+
 echo ""
 echo -e "${GREEN}========================================${NC}"
 echo -e "${GREEN}Trimmed FastQC analysis completed!${NC}"
 echo -e "${GREEN}========================================${NC}"
 echo ""
 echo "Summary:"
-echo "  Input directory: $OUTPUT_TRIMMED_DIR"
-echo "  Files processed: $FASTQ_COUNT"
+echo "  Input directory: $INPUT_DIR & $OUTPUT_TRIMMED_DIR"
+echo "  Files processed: $TOTAL_FILES"
 echo "  FastQC results: $OUTPUT_FASTQC_DIR"
 echo "  MultiQC report: $OUTPUT_FASTQC_MULTIQC_DIR/multiqc_report.html"
 echo ""

@@ -112,7 +112,7 @@ align_paired_reads() {
     
     # Define output files
     local sam_file="$output_dir/${sample_name}.sam"
-    local summary_file="$output_dir/${sample_name}.hisat2.summary"
+    local summary_file="$output_dir/${sample_name}.hisat2.log"
     
     print_info "Aligning sample: $sample_name"
     
