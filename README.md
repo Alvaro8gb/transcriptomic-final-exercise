@@ -30,3 +30,32 @@ En este repositorio se proporcionan todos los inputs del Apartado 2:
 **Pregunta 4 (3 puntos):** ¿Qué genes se encuentran diferencialmente expresados entre las muestras pertenecientes al grupo tratado con OHT con respecto al control tras 24h? ¿Y en el caso de las muestras tratadas con DPN, también tras 24h? Como parte de la respuesta a esta pregunta, podéis entregar una o más tablas adjuntas donde se incluyan los genes diferencialmente expresados, indicando el criterio o los criterios que habéis seguido para filtrar los resultados, así como cualquier otro gráfico o gráficos que hayáis elaborado durante el análisis.
 
 **Pregunta 5 (2.5 puntos):** Nuestro colaborador ha comparado las muestras tratadas con DPN tras 48h con las muestras control. Nos ha llamado para contarnos que los cambios de expresión tras 48h son mucho más evidentes y nos preguntamos si el DPN produce algún efecto en las primeras 24h. Para contestar esta pregunta, le pedimos que genere un GMT (disponible en la carpera de input) con los genes más expresados en las muestras tratadas tras 48h (DPN_perturbed) y los genes más expresados en la muestra control (DPN_unperturbed). Realiza un análisis con GSEA para determinar el efecto del tratamiento a las 24h. ¿A qué conclusión llegas? Incluye una tabla con los resultados del análisis, destacando las columnas con los valores utilizados para extraer vuestras conclusiones. También incluye los gráficos característicos de este tipo de análisis.
+
+
+### Env 
+
+```bash
+
+conda activate RNAseq
+
+```
+
+### Extra commands
+```
+gtf2bed < Homo_sapiens.GRCh38.109.chr21.gtf > Homo_sapiens.GRCh38.109.chr21.bed 
+
+```
+
+``` infer_experiment.py -i Apartado1/output/alignment/SRR479052.chr21.sam -r Apartado1/input/Homo_sapiens.GRCh38.109.chr21.bed 
+infer_experiment.py -i Apartado1/output/alignment/SRR479052.chr21.sam -r Apartado1/input/Homo_sapiens.GRCh38.109.chr21.bed 
+Reading reference gene model Apartado1/input/Homo_sapiens.GRCh38.109.chr21.bed ... Done
+Loading SAM/BAM file ...  Finished
+Total 20291 usable reads were sampled
+
+
+This is PairEnd Data
+Fraction of reads failed to determine: 0.1343
+Fraction of reads explained by "1++,1--,2+-,2-+": 0.4250
+Fraction of reads explained by "1+-,1-+,2++,2--": 0.4406
+```
+-> UNSTRANDED

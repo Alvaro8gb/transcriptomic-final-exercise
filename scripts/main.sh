@@ -279,6 +279,7 @@ echo ""
 # Run MultiQC on all output directories to create comprehensive report
 multiqc \
     "$BASE_OUT" \
+    --cl-config "fn_clean_exts: []" \
     -o "$MULTIQC_ALIGN_DIR" \
     --title "RNA-Seq Pipeline - Comprehensive Quality Report" 
 
